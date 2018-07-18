@@ -48,6 +48,7 @@ from FUPool import *
 from O3Checker import O3Checker
 from BranchPredictor import *
 
+
 class DerivO3CPU(BaseCPU):
     type = 'DerivO3CPU'
     cxx_header = 'cpu/o3/deriv.hh'
@@ -67,10 +68,10 @@ class DerivO3CPU(BaseCPU):
     activity = Param.Unsigned(0, "Initial count")
 
     cacheStorePorts = Param.Unsigned(200, "Cache Ports. "
-          "Constrains stores only. Loads are constrained by load FUs.")
+                                     "Constrains stores only. Loads are constrained by load FUs.")
 
     decodeToFetchDelay = Param.Cycles(1, "Decode to fetch delay")
-    renameToFetchDelay = Param.Cycles(1 ,"Rename to fetch delay")
+    renameToFetchDelay = Param.Cycles(1, "Rename to fetch delay")
     iewToFetchDelay = Param.Cycles(1, "Issue/Execute/Writeback to fetch "
                                    "delay")
     commitToFetchDelay = Param.Cycles(1, "Commit to fetch delay")
@@ -93,45 +94,49 @@ class DerivO3CPU(BaseCPU):
     renameWidth = Param.Unsigned(8, "Rename width")
 
     commitToIEWDelay = Param.Cycles(1, "Commit to "
-               "Issue/Execute/Writeback delay")
+                                    "Issue/Execute/Writeback delay")
     renameToIEWDelay = Param.Cycles(2, "Rename to "
-               "Issue/Execute/Writeback delay")
+                                    "Issue/Execute/Writeback delay")
     issueToExecuteDelay = Param.Cycles(1, "Issue to execute delay (internal "
-              "to the IEW stage)")
+                                       "to the IEW stage)")
     dispatchWidth = Param.Unsigned(8, "Dispatch width")
     issueWidth = Param.Unsigned(8, "Issue width")
     wbWidth = Param.Unsigned(8, "Writeback width")
     fuPool = Param.FUPool(DefaultFUPool(), "Functional Unit pool")
 
     iewToCommitDelay = Param.Cycles(1, "Issue/Execute/Writeback to commit "
-               "delay")
+                                    "delay")
     renameToROBDelay = Param.Cycles(1, "Rename to reorder buffer delay")
     commitWidth = Param.Unsigned(8, "Commit width")
     squashWidth = Param.Unsigned(8, "Squash width")
     trapLatency = Param.Cycles(13, "Trap latency")
     fetchTrapLatency = Param.Cycles(1, "Fetch trap latency")
 
-    backComSize = Param.Unsigned(5, "Time buffer size for backwards communication")
-    forwardComSize = Param.Unsigned(5, "Time buffer size for forward communication")
+    backComSize = Param.Unsigned(
+        5, "Time buffer size for backwards communication")
+    forwardComSize = Param.Unsigned(
+        5, "Time buffer size for forward communication")
 
     LQEntries = Param.Unsigned(32, "Number of load queue entries")
     SQEntries = Param.Unsigned(32, "Number of store queue entries")
-    LSQDepCheckShift = Param.Unsigned(4, "Number of places to shift addr before check")
+    LSQDepCheckShift = Param.Unsigned(
+        4, "Number of places to shift addr before check")
     LSQCheckLoads = Param.Bool(True,
-        "Should dependency violations be checked for loads & stores or just stores")
+                               "Should dependency violations be checked for loads & stores or just stores")
     store_set_clear_period = Param.Unsigned(250000,
-            "Number of load/store insts before the dep predictor should be invalidated")
+                                            "Number of load/store insts before the dep predictor should be invalidated")
     LFSTSize = Param.Unsigned(1024, "Last fetched store table size")
     SSITSize = Param.Unsigned(1024, "Store set ID table size")
 
-    numRobs = Param.Unsigned(1, "Number of Reorder Buffers");
+    numRobs = Param.Unsigned(1, "Number of Reorder Buffers")
 
-    numPhysIntRegs = Param.Unsigned(256, "Number of physical integer registers")
+    numPhysIntRegs = Param.Unsigned(
+        256, "Number of physical integer registers")
     numPhysFloatRegs = Param.Unsigned(256, "Number of physical floating point "
                                       "registers")
     # most ISAs don't use condition-code regs, so default is 0
     _defaultNumPhysCCRegs = 0
-    if buildEnv['TARGET_ISA'] in ('arm','x86'):
+    if buildEnv['TARGET_ISA'] in ('arm', 'x86'):
         # For x86, each CC reg is used to hold only a subset of the
         # flags, so we need 4-5 times the number of CC regs as
         # physical integer regs to be sure we don't run out.  In
@@ -140,7 +145,7 @@ class DerivO3CPU(BaseCPU):
         # never be the bottleneck here.
         _defaultNumPhysCCRegs = Self.numPhysIntRegs * 5
     numPhysVecRegs = Param.Unsigned(256, "Number of physical vector "
-                                      "registers")
+                                    "registers")
     numPhysCCRegs = Param.Unsigned(_defaultNumPhysCCRegs,
                                    "Number of physical cc registers")
     numIQEntries = Param.Unsigned(64, "Number of instruction queue entries")
@@ -148,16 +153,15 @@ class DerivO3CPU(BaseCPU):
 
     smtNumFetchingThreads = Param.Unsigned(1, "SMT Number of Fetching Threads")
     smtFetchPolicy = Param.String('SingleThread', "SMT Fetch policy")
-    smtLSQPolicy    = Param.String('Partitioned', "SMT LSQ Sharing Policy")
+    smtLSQPolicy = Param.String('Partitioned', "SMT LSQ Sharing Policy")
     smtLSQThreshold = Param.Int(100, "SMT LSQ Threshold Sharing Parameter")
-    smtIQPolicy    = Param.String('Partitioned', "SMT IQ Sharing Policy")
+    smtIQPolicy = Param.String('Partitioned', "SMT IQ Sharing Policy")
     smtIQThreshold = Param.Int(100, "SMT IQ Threshold Sharing Parameter")
-    smtROBPolicy   = Param.String('Partitioned', "SMT ROB Sharing Policy")
+    smtROBPolicy = Param.String('Partitioned', "SMT ROB Sharing Policy")
     smtROBThreshold = Param.Int(100, "SMT ROB Threshold Sharing Parameter")
     smtCommitPolicy = Param.String('RoundRobin', "SMT Commit Policy")
 
-    branchPred = Param.BranchPredictor(TournamentBP(numThreads =
-                                                       Parent.numThreads),
+    branchPred = Param.BranchPredictor(GASBP(numThreads=Parent.numThreads),
                                        "Branch Predictor")
     needsTSO = Param.Bool(buildEnv['TARGET_ISA'] == 'x86',
                           "Enable TSO Memory model")
@@ -170,8 +174,8 @@ class DerivO3CPU(BaseCPU):
                                      exitOnError=False,
                                      updateOnError=True,
                                      warnOnlyOnLoadError=True)
-            self.checker.itb = ArmTLB(size = self.itb.size)
-            self.checker.dtb = ArmTLB(size = self.dtb.size)
+            self.checker.itb = ArmTLB(size=self.itb.size)
+            self.checker.dtb = ArmTLB(size=self.dtb.size)
             self.checker.cpu_id = self.cpu_id
 
         else:

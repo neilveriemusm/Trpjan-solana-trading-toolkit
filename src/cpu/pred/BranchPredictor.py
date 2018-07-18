@@ -30,6 +30,7 @@
 from m5.SimObject import SimObject
 from m5.params import *
 
+
 class BranchPredictor(SimObject):
     type = 'BranchPredictor'
     cxx_class = 'BPredUnit'
@@ -49,8 +50,7 @@ class BranchPredictor(SimObject):
     indirectWays = Param.Unsigned(2, "Ways for indirect predictor")
     indirectTagSize = Param.Unsigned(16, "Indirect target cache tag bits")
     indirectPathLength = Param.Unsigned(3,
-        "Previous indirect targets to use for path history")
-
+                                        "Previous indirect targets to use for path history")
 
 
 class LocalBP(BranchPredictor):
@@ -86,6 +86,7 @@ class BiModeBP(BranchPredictor):
     choicePredictorSize = Param.Unsigned(8192, "Size of choice predictor")
     choiceCtrBits = Param.Unsigned(2, "Bits of choice counters")
 
+
 class LTAGE(BranchPredictor):
     type = 'LTAGE'
     cxx_class = 'LTAGE'
@@ -97,8 +98,17 @@ class LTAGE(BranchPredictor):
     nHistoryTables = Param.Unsigned(12, "Number of history tables")
     tagTableCounterBits = Param.Unsigned(3, "Number of tag table counter bits")
     histBufferSize = Param.Unsigned(2097152,
-            "A large number to track all branch histories(2MEntries default)")
+                                    "A large number to track all branch histories(2MEntries default)")
     minHist = Param.Unsigned(4, "Minimum history size of LTAGE")
     maxHist = Param.Unsigned(640, "Maximum history size of LTAGE")
     minTagWidth = Param.Unsigned(7, "Minimum tag size in tag tables")
 
+
+class GASBP(BranchPredictor):
+    type = 'GASBP'
+    cxx_class = 'GASBP'
+    cxx_header = "cpu/pred/gas.hh"
+
+    bhrBits = Param.Unsigned(11, "Number of bits to look in BHR")
+    localCtrBits = Param.Unsigned(2, "Bits per counter")
+    phtBits = Param.Unsigned(5, "Number of bits to look in PHT")
