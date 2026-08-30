@@ -2,11 +2,11 @@
 
 A self-hosted Solana console for meme-coin **launch, sniping, copy trading, volume, and wallet risk**. The sidebar in the app says **Meme Tool**. This repo is the whole desk: Next.js pages on top, Solana builders underneath, no Telegram hop in the middle.
 
-![Trojan hero](docs/hero.png)
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/df9d2058-8679-4843-add4-8c2aa4335fb7" />
 
 If you have ever juggled a launch script, a sniper process, a copy-trade bot, and a spreadsheet of wallets, this project is meant to feel like coming home. One install, one sidebar, one set of RPC and gRPC credentials.
 
-![Welcome to the console](docs/welcome.png)
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/970727a4-f8f1-4daf-bec9-60c74158fd8a" />
 
 ---
 
@@ -37,8 +37,6 @@ It is still serious infrastructure. Treat it with the same care you would give a
 
 ## What you can do
 
-![Operator modules](docs/modules.svg)
-
 | Route | Kind job it does |
 | --- | --- |
 | `/launch` | Create a pump.fun token (name, ticker, art, socials) and open the bundle modal |
@@ -57,9 +55,7 @@ Wallets connect through Phantom, Solflare, Torus, or Ledger (`pages/_app.tsx`). 
 
 ## A typical day
 
-![Operator journey](docs/journey.png)
-
-![Journey steps](docs/journey-flow.svg)
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a5ecf608-bf4f-4a35-b393-56be2ff9f7b6" />
 
 1. **Mint + bundle** on `/launch`. Upload art, fill website / X / Telegram / Discord, then add buyer wallets in `PumpBundleModal`. The API decrypts the payload, refuses more than 15 keys, checks SOL, and calls `PumpFunSDK` with an optional Jito send.
 2. **Watch** in `/trenches` or `/control/[mint]`. Control pulls GeckoTerminal metadata, shows a TradingView widget, and lists each buyer’s SOL and SPL.
@@ -198,9 +194,10 @@ trojan-app/
 
 ## How a request stays kind to your keys
 
-![Keys stay on your host](docs/safety.png)
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/83485bf0-2027-4030-b2bb-6a7fbe8501e5" />
 
-![Security flow](docs/security-flow.svg)
+<img width="300" height="98" alt="image" src="https://github.com/user-attachments/assets/118bd5ed-ea04-4832-915b-1fb05f0c4013" />
+
 
 1. The form never POSTs raw secrets as JSON fields for the heavy routes. It wraps them with `CryptoJS.AES.encrypt(..., NEXT_PUBLIC_ENCRYPT_KEY)`.
 2. The matching `pages/api/*` handler decrypts, validates (key shape, wallet count, balances), then calls `base/`.
