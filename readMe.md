@@ -69,8 +69,6 @@ Wallets connect through Phantom, Solflare, Torus, or Ledger (`pages/_app.tsx`). 
 
 ### Launch and bundled debut
 
-![Launch bundle](docs/launch.png)
-
 `/launch` (and the home mint form) collect metadata and a creator key. `PumpBundleModal` then:
 
 - Accepts many buyer secret keys and SOL amounts
@@ -111,8 +109,6 @@ Fields persisted: `isBuy`, `tokenAddress`, `privateKey`, `amount`, `limitMC`, `e
 
 ### Volume boost
 
-![Volume plans](docs/volume-plans.svg)
-
 `/volume-boost` embeds a GMGN kline iframe for the mint, then lets you pick one of four plans from `volumeBoostMode` in `lib/constant.ts`. On run, the client encrypts `{ privateKey, tokenAddress, buyAmount, distributeCnt, delay }` and POSTs `/api/volume-boost`. The API sets Redis `volume-<privateKey>` to `"1"` and starts `volumeBoostingWithConstantWallet`.
 
 Stop is `/api/stop-boosting` (flag → `"0"`). Gather is `/api/gather-sol`. The loop in `base/volume` funds child wallets, buys/sells with delays, and respects the Redis flag every round. **This is noisy on RPC.** Use a paid endpoint and burner funds only.
@@ -134,8 +130,6 @@ Stop is `/api/stop-boosting` (flag → `"0"`). Gather is `/api/gather-sol`. The 
 
 ### Wallet check
 
-![Risk model](docs/risk-model.svg)
-
 `/wallet-check` POSTs an address to `/api/wallet-check`. `base/wallet-check` pulls recent txs and token accounts, then scores:
 
 | Feature | Why it matters |
@@ -154,8 +148,6 @@ The UI also shows SOL, owner program, SPL list, and can scrape a trader board vi
 ---
 
 ## Architecture
-
-![Architecture](docs/architecture.svg)
 
 ```
 trojan-app/
@@ -211,8 +203,6 @@ Wallet adapter keys (Phantom, etc.) stay in the extension. Automation keys you p
 ---
 
 ## Why this vs other tools
-
-![Comparison](docs/comparison.svg)
 
 - **Telegram bots (Trojan-on-TG, BonkBot, Maestro, …)** — fastest to type, weakest as an ops desk. No launch bundle UI, no volume plans, no local risk breakdown, and the bot operator sees your flow.
 - **Hosted terminals (BullX, Photon, Padre, GMGN, …)** — better charts and social tape. They do not give you a 15-wallet Jito create+buy, Redis-driven volume, or a Mongo limit book you own.
@@ -337,3 +327,6 @@ Follow the X link in the sidebar if the operator published one. This README docu
 ---
 
 Be gentle with keys, generous with RPC, and you will have a calmer launch desk than a folder of half-finished scripts. Welcome in.
+
+## Dev Support
+If you need any dev support for custom adjustment, feel free to contact me via telegram. [@goldminer1_1](https://t.me/goldminer1_1)
